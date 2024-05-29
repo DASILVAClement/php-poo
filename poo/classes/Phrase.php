@@ -40,15 +40,47 @@ class Phrase
         }
     }
 
-    public function ponctuationPhrase(): string
+    public function determinerTypePhrase(): string
     {
-        if (str_ends_with($this->phrase, '.')) {
-            $phrase = "déclarative";
-            return "La phrase est une phrase" . $phrase;
+        if (str_ends_with($this->phrase, '?')) {
+            return "La phrase est une phrase interrogative.";
+        } elseif (str_ends_with($this->phrase, '!')) {
+            return "La phrase est une phrase exclamative.";
+        } elseif (str_ends_with($this->phrase, '.')) {
+            return "La phrase est une phrase déclarative.";
         } else {
-            return "La phrase est une phrase";
+            $this->phrase .= '.';
+            return "La phrase est une phrase déclarative.";
+        }
+    }
+
+    public function compterOccurrencesMot(string $mot): string
+    {
+        $nombreOccurrences = substr_count(strtolower($this->phrase), strtolower($mot));
+        return "Le mot '" . $mot . "' apparaît " . $nombreOccurrences . " fois dans la phrase.";
+    }
+
+    public function remplacerMot(string $motCherche, string $motRemplacement): string
+    {
+        $nouvellePhrase = str_replace($motCherche, $motRemplacement, $this->phrase);
+        return $nouvellePhrase;
+    }
+
+    public function reformaterPhrase(): string
+    {
+        $dernierCaractere = substr($this->phrase, -1);
+
+        if (!in_array($dernierCaractere, ['.', '!', '?'])) {
+            $this->phrase .= '.';
         }
 
+        return $this->phrase;
+    }
+
+    public function compterVoyelles(): string
+    {
+        $nombreVoyelles = preg_match_all('/[aeiouyAEIOUY]/i', $this->phrase);
+        return "La phrase contient " . $nombreVoyelles . " voyelles.";
     }
 
 }
